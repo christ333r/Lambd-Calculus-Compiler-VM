@@ -1,0 +1,2 @@
+Error = f"string"."string";
+Main = ('Error',"Hola");     

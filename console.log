@@ -1,0 +1,243 @@
+Ptr Creado: {ptr: 0x6216e0, type: 5Types, obj:0x5ff3a0}
+movimiento Ptr: {ptr: 0x6216e0, type: 5Types, obj:0x5ff3a0} a ptr: {ptr: 0x6216e0, type: 5Types, obj:0x621c60}
+movimiento finalizada
+Ptr Creado: {ptr: 0x621ce0, type: i, obj:0x5ff400}
+movimiento Ptr: {ptr: 0x621ce0, type: i, obj:0x5ff400} a ptr: {ptr: 0x621ce0, type: i, obj:0x621d70}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x6216e0, type: 5Types, obj:0x621c60} a ptr: {ptr: 0x6216e0, type: 5Types, obj:0x621d20}
+movimiento finalizada
+Ptr Creado: {ptr: 0x621c60, type: 5Types, obj:0x5ff110}
+movimiento Ptr: {ptr: 0x621c60, type: 5Types, obj:0x5ff110} a ptr: {ptr: 0x621c60, type: 5Types, obj:0x621df0}
+movimiento finalizada
+Ptr Creado: {ptr: 0x621ca0, type: i, obj:0x5ff170}
+movimiento Ptr: {ptr: 0x621ca0, type: i, obj:0x5ff170} a ptr: {ptr: 0x621ca0, type: i, obj:0x621ec0}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x621c60, type: 5Types, obj:0x621df0} a ptr: {ptr: 0x621c60, type: 5Types, obj:0x621e70}
+movimiento finalizada
+Copia generada de Ptr: {ptr: 0x621c60, type: 5Types, obj:0x621e70} a Ptr: {ptr: 0x9871b0, type: 5Types, obj:0x9870e0}
+Copia generada de Ptr: {ptr: 0x621ca0, type: i, obj:0x621ec0} a Ptr: {ptr: 0x9871f0, type: i, obj:0x987130}
+Copia generada de Ptr: {ptr: 0x621c60, type: 5Types, obj:0x621e70} a Ptr: {ptr: 0x987300, type: 5Types, obj:0x987230}
+Copia generada de Ptr: {ptr: 0x621ca0, type: i, obj:0x621ec0} a Ptr: {ptr: 0x987340, type: i, obj:0x987280}
+Copia generada de Ptr: {ptr: 0x987300, type: 5Types, obj:0x987230} a Ptr: {ptr: 0x9874a0, type: 5Types, obj:0x9873d0}
+Copia generada de Ptr: {ptr: 0x987340, type: i, obj:0x987280} a Ptr: {ptr: 0x9874e0, type: i, obj:0x987420}
+Liberando memoria... Ptr: "{ptr: 0x987300, type: 5Types, obj:0x987230}"obj: 0x987230
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x987340, type: i, obj:0x987280}"obj: 0x987280
+Liberación finalizada.
+Ptr Creado: {ptr: 0x621df0, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff460}
+movimiento Ptr: {ptr: 0x621df0, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff460} a ptr: {ptr: 0x621df0, type: St6vectorI3PtrSaIS0_EE, obj:0x9875c0}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x6216e0, type: 5Types, obj:0x621d20} a ptr: {ptr: 0x6216e0, type: 5Types, obj:0x987520}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x621ce0, type: i, obj:0x621d70} a ptr: {ptr: 0x621ce0, type: i, obj:0x987570}
+movimiento finalizada
+Liberando memoria... Ptr: "{ptr: 0x621c60, type: 5Types, obj:0x621e70}"obj: 0x621e70
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x621ca0, type: i, obj:0x621ec0}"obj: 0x621ec0
+Liberación finalizada.
+Ptr Creado: {ptr: 0x621d20, type: 5Types, obj:0x5ff4d0}
+movimiento Ptr: {ptr: 0x621d20, type: 5Types, obj:0x5ff4d0} a ptr: {ptr: 0x621d20, type: 5Types, obj:0x621d60}
+movimiento finalizada
+Ptr Creado: {ptr: 0x621e40, type: 5Types, obj:0x5ff1d0}
+movimiento Ptr: {ptr: 0x621e40, type: 5Types, obj:0x5ff1d0} a ptr: {ptr: 0x621e40, type: 5Types, obj:0x621e80}
+movimiento finalizada
+Ptr Creado: {ptr: 0x621f00, type: i, obj:0x5ff230}
+movimiento Ptr: {ptr: 0x621f00, type: i, obj:0x5ff230} a ptr: {ptr: 0x621f00, type: i, obj:0x987280}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x621e40, type: 5Types, obj:0x621e80} a ptr: {ptr: 0x621e40, type: 5Types, obj:0x987230}
+movimiento finalizada
+Copia generada de Ptr: {ptr: 0x621e40, type: 5Types, obj:0x987230} a Ptr: {ptr: 0x987300, type: 5Types, obj:0x987690}
+Copia generada de Ptr: {ptr: 0x621f00, type: i, obj:0x987280} a Ptr: {ptr: 0x987340, type: i, obj:0x9876e0}
+Copia generada de Ptr: {ptr: 0x621e40, type: 5Types, obj:0x987230} a Ptr: {ptr: 0x987830, type: 5Types, obj:0x987760}
+Copia generada de Ptr: {ptr: 0x621f00, type: i, obj:0x987280} a Ptr: {ptr: 0x987870, type: i, obj:0x9877b0}
+Copia generada de Ptr: {ptr: 0x987830, type: 5Types, obj:0x987760} a Ptr: {ptr: 0x9879d0, type: 5Types, obj:0x987900}
+Copia generada de Ptr: {ptr: 0x987870, type: i, obj:0x9877b0} a Ptr: {ptr: 0x987a10, type: i, obj:0x987950}
+Liberando memoria... Ptr: "{ptr: 0x987830, type: 5Types, obj:0x987760}"obj: 0x987760
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x987870, type: i, obj:0x9877b0}"obj: 0x9877b0
+Liberación finalizada.
+Ptr Creado: {ptr: 0x621e80, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff530}
+movimiento Ptr: {ptr: 0x621e80, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff530} a ptr: {ptr: 0x621e80, type: St6vectorI3PtrSaIS0_EE, obj:0x9877b0}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x621d20, type: 5Types, obj:0x621d60} a ptr: {ptr: 0x621d20, type: 5Types, obj:0x987760}
+movimiento finalizada
+Liberando memoria... Ptr: "{ptr: 0x621e40, type: 5Types, obj:0x987230}"obj: 0x987230
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x621f00, type: i, obj:0x987280}"obj: 0x987280
+Liberación finalizada.
+Ptr Creado: {ptr: 0x621e40, type: 5Types, obj:0x5ff050}
+movimiento Ptr: {ptr: 0x621e40, type: 5Types, obj:0x5ff050} a ptr: {ptr: 0x621e40, type: 5Types, obj:0x621ed0}
+movimiento finalizada
+Ptr Creado: {ptr: 0x987830, type: i, obj:0x5ff0b0}
+movimiento Ptr: {ptr: 0x987830, type: i, obj:0x5ff0b0} a ptr: {ptr: 0x987830, type: i, obj:0x987280}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x621e40, type: 5Types, obj:0x621ed0} a ptr: {ptr: 0x621e40, type: 5Types, obj:0x987230}
+movimiento finalizada
+Copia generada de Ptr: {ptr: 0x621e40, type: 5Types, obj:0x987230} a Ptr: {ptr: 0x987870, type: 5Types, obj:0x987a50}
+Copia generada de Ptr: {ptr: 0x987830, type: i, obj:0x987280} a Ptr: {ptr: 0x621d60, type: i, obj:0x987aa0}
+Copia generada de Ptr: {ptr: 0x621e40, type: 5Types, obj:0x987230} a Ptr: {ptr: 0x621da0, type: 5Types, obj:0x987b20}
+Copia generada de Ptr: {ptr: 0x987830, type: i, obj:0x987280} a Ptr: {ptr: 0x987bf0, type: i, obj:0x987b70}
+Copia generada de Ptr: {ptr: 0x621da0, type: 5Types, obj:0x987b20} a Ptr: {ptr: 0x987d50, type: 5Types, obj:0x987c80}
+Copia generada de Ptr: {ptr: 0x987bf0, type: i, obj:0x987b70} a Ptr: {ptr: 0x987d90, type: i, obj:0x987cd0}
+Liberando memoria... Ptr: "{ptr: 0x621da0, type: 5Types, obj:0x987b20}"obj: 0x987b20
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x987bf0, type: i, obj:0x987b70}"obj: 0x987b70
+Liberación finalizada.
+Ptr Creado: {ptr: 0x621ed0, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff5a0}
+movimiento Ptr: {ptr: 0x621ed0, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff5a0} a ptr: {ptr: 0x621ed0, type: St6vectorI3PtrSaIS0_EE, obj:0x987e70}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x621d20, type: 5Types, obj:0x987760} a ptr: {ptr: 0x621d20, type: 5Types, obj:0x987dd0}
+movimiento finalizada
+movimiento Ptr: {ptr: 0x621e80, type: St6vectorI3PtrSaIS0_EE, obj:0x9877b0} a ptr: {ptr: 0x621e80, type: St6vectorI3PtrSaIS0_EE, obj:0x987e20}
+movimiento finalizada
+Liberando memoria... Ptr: "{ptr: 0x621e40, type: 5Types, obj:0x987230}"obj: 0x987230
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x987830, type: i, obj:0x987280}"obj: 0x987280
+Liberación finalizada.
+get: Ptr: {ptr: 0x621d20, type: 5Types, obj:0x987dd0}, with TypeReturn 5Types
+key: 1
+get: Ptr: {ptr: 0x621ed0, type: St6vectorI3PtrSaIS0_EE, obj:0x987e70}, with TypeReturn St6vectorI3PtrSaIS0_EE
+get: Ptr: {ptr: 0x987870, type: 5Types, obj:0x987a50}, with TypeReturn 5Types
+key: 2
+get: Ptr: {ptr: 0x621d60, type: i, obj:0x987aa0}, with TypeReturn i
+value: 0
+END
+get: Ptr: {ptr: 0x621e80, type: St6vectorI3PtrSaIS0_EE, obj:0x987e20}, with TypeReturn St6vectorI3PtrSaIS0_EE
+get: Ptr: {ptr: 0x987300, type: 5Types, obj:0x987690}, with TypeReturn 5Types
+key: 4
+get: Ptr: {ptr: 0x987340, type: i, obj:0x9876e0}, with TypeReturn i
+value: 0
+END
+END
+('',"Hola")
+calculando resultado...
+get: Ptr: {ptr: 0x621d20, type: 5Types, obj:0x987dd0}, with TypeReturn 5Types
+key: 1
+get: Ptr: {ptr: 0x621ed0, type: St6vectorI3PtrSaIS0_EE, obj:0x987e70}, with TypeReturn St6vectorI3PtrSaIS0_EE
+get: Ptr: {ptr: 0x987870, type: 5Types, obj:0x987a50}, with TypeReturn 5Types
+key: 2
+get: Ptr: {ptr: 0x621d60, type: i, obj:0x987aa0}, with TypeReturn i
+value: 0
+END
+get: Ptr: {ptr: 0x621e80, type: St6vectorI3PtrSaIS0_EE, obj:0x987e20}, with TypeReturn St6vectorI3PtrSaIS0_EE
+get: Ptr: {ptr: 0x987300, type: 5Types, obj:0x987690}, with TypeReturn 5Types
+key: 4
+get: Ptr: {ptr: 0x987340, type: i, obj:0x9876e0}, with TypeReturn i
+value: 0
+END
+END
+star
+get: Ptr: {ptr: 0x621d20, type: 5Types, obj:0x987dd0}, with TypeReturn 5Types
+key: 1
+get: Ptr: {ptr: 0x621e80, type: St6vectorI3PtrSaIS0_EE, obj:0x987e20}, with TypeReturn St6vectorI3PtrSaIS0_EE
+get: Ptr: {ptr: 0x621ed0, type: St6vectorI3PtrSaIS0_EE, obj:0x987e70}, with TypeReturn St6vectorI3PtrSaIS0_EE
+run
+Ptr Creado de valor: {ptr: 0x621ed0, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff8a0}
+Copia generada de Ptr: {ptr: 0x987870, type: 5Types, obj:0x987a50} a Ptr: {ptr: 0x621e40, type: 5Types, obj:0x987230}
+Copia generada de Ptr: {ptr: 0x621d60, type: i, obj:0x987aa0} a Ptr: {ptr: 0x621b60, type: i, obj:0x987280}
+Copia generada de Ptr: {ptr: 0x621ed0, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff8a0} a Ptr: {ptr: 0x621da0, type: St6vectorI3PtrSaIS0_EE, obj:0x621c60}
+star
+get: Ptr: {ptr: 0x987300, type: 5Types, obj:0x987690}, with TypeReturn 5Types
+key: 4
+Copia generada de Ptr: {ptr: 0x621e40, type: 5Types, obj:0x987230} a Ptr: {ptr: 0x987bf0, type: 5Types, obj:0x987b20}
+Copia generada de Ptr: {ptr: 0x621b60, type: i, obj:0x987280} a Ptr: {ptr: 0x9877e0, type: i, obj:0x987b70}
+Copia generada de Ptr: {ptr: 0x621da0, type: St6vectorI3PtrSaIS0_EE, obj:0x621c60} a Ptr: {ptr: 0x621ba0, type: St6vectorI3PtrSaIS0_EE, obj:0x987760}
+get: Ptr: {ptr: 0x987340, type: i, obj:0x9876e0}, with TypeReturn i
+value: 0
+star
+get: Ptr: {ptr: 0x6216e0, type: 5Types, obj:0x987520}, with TypeReturn 5Types
+key: 0
+get: Ptr: {ptr: 0x621ce0, type: i, obj:0x987570}, with TypeReturn i
+value: 1
+get: Ptr: {ptr: 0x621df0, type: St6vectorI3PtrSaIS0_EE, obj:0x9875c0}, with TypeReturn St6vectorI3PtrSaIS0_EE
+get: Ptr: {ptr: 0x621ba0, type: St6vectorI3PtrSaIS0_EE, obj:0x987760}, with TypeReturn St6vectorI3PtrSaIS0_EE
+Copia generada de Ptr: {ptr: 0x987bf0, type: 5Types, obj:0x987b20} a Ptr: {ptr: 0x987820, type: 5Types, obj:0x9861b0}
+Copia generada de Ptr: {ptr: 0x9877e0, type: i, obj:0x987b70} a Ptr: {ptr: 0x986280, type: i, obj:0x986200}
+Copia generada de Ptr: {ptr: 0x987820, type: 5Types, obj:0x9861b0} a Ptr: {ptr: 0x986490, type: 5Types, obj:0x9863c0}
+Copia generada de Ptr: {ptr: 0x986280, type: i, obj:0x986200} a Ptr: {ptr: 0x9864d0, type: i, obj:0x986410}
+star
+get: Ptr: {ptr: 0x9871b0, type: 5Types, obj:0x9870e0}, with TypeReturn 5Types
+key: 3
+get: Ptr: {ptr: 0x9871f0, type: i, obj:0x987130}, with TypeReturn i
+value: 1
+copia de asignacion Ptr: {ptr: 0x986490, type: 5Types, obj:0x9863c0} a ptr: {ptr: 0x9871b0, type: 5Types, obj:0x9870e0}
+Liberando memoria... Ptr: "{ptr: 0x9871b0, type: 5Types, obj:0x9870e0}"obj: 0x9870e0
+Liberación finalizada.
+copia de asignacion finalizada
+copia de asignacion Ptr: {ptr: 0x9864d0, type: i, obj:0x986410} a ptr: {ptr: 0x9871f0, type: i, obj:0x987130}
+Liberando memoria... Ptr: "{ptr: 0x9871f0, type: i, obj:0x987130}"obj: 0x987130
+Liberación finalizada.
+copia de asignacion finalizada
+end
+Liberando memoria... Ptr: "{ptr: 0x986490, type: 5Types, obj:0x9863c0}"obj: 0x9863c0
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x9864d0, type: i, obj:0x986410}"obj: 0x986410
+Liberación finalizada.
+Ptr Creado: {ptr: 0x9862c0, type: 5Types, obj:0x5ff030}
+Copia generada de Ptr: {ptr: 0x9871b0, type: 5Types, obj:0x9870e0} a Ptr: {ptr: 0x986420, type: 5Types, obj:0x986350}
+Copia generada de Ptr: {ptr: 0x9871f0, type: i, obj:0x987130} a Ptr: {ptr: 0x986460, type: i, obj:0x9863a0}
+Copia generada de Ptr: {ptr: 0x9871b0, type: 5Types, obj:0x9870e0} a Ptr: {ptr: 0x986570, type: 5Types, obj:0x9864a0}
+Copia generada de Ptr: {ptr: 0x9871f0, type: i, obj:0x987130} a Ptr: {ptr: 0x9865b0, type: i, obj:0x9864f0}
+Copia generada de Ptr: {ptr: 0x986570, type: 5Types, obj:0x9864a0} a Ptr: {ptr: 0x986710, type: 5Types, obj:0x986640}
+Copia generada de Ptr: {ptr: 0x9865b0, type: i, obj:0x9864f0} a Ptr: {ptr: 0x986750, type: i, obj:0x986690}
+Liberando memoria... Ptr: "{ptr: 0x986570, type: 5Types, obj:0x9864a0}"obj: 0x9864a0
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x9865b0, type: i, obj:0x9864f0}"obj: 0x9864f0
+Liberación finalizada.
+Ptr Creado: {ptr: 0x986300, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff080}
+copia de asignacion Ptr: {ptr: 0x9862c0, type: 5Types, obj:0x5ff030} a ptr: {ptr: 0x6216e0, type: 5Types, obj:0x987520}
+Liberando memoria... Ptr: "{ptr: 0x6216e0, type: 5Types, obj:0x987520}"obj: 0x987520
+Liberación finalizada.
+copia de asignacion finalizada
+copia de asignacion Ptr: {ptr: 0x986300, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff080} a ptr: {ptr: 0x621ce0, type: i, obj:0x987570}
+Liberando memoria... Ptr: "{ptr: 0x621ce0, type: i, obj:0x987570}"obj: 0x987570
+Liberación finalizada.
+Copia generada de Ptr: {ptr: 0x986710, type: 5Types, obj:0x986640} a Ptr: {ptr: 0x621ce0, type: 5Types, obj:0x9864f0}
+Copia generada de Ptr: {ptr: 0x986750, type: i, obj:0x986690} a Ptr: {ptr: 0x986790, type: i, obj:0x986540}
+Copia generada de Ptr: {ptr: 0x986420, type: 5Types, obj:0x986350} a Ptr: {ptr: 0x9868f0, type: 5Types, obj:0x986820}
+Copia generada de Ptr: {ptr: 0x986460, type: i, obj:0x9863a0} a Ptr: {ptr: 0x986930, type: i, obj:0x986870}
+copia de asignacion finalizada
+Liberando memoria... Ptr: "{ptr: 0x621df0, type: St6vectorI3PtrSaIS0_EE, obj:0x9875c0}"obj: 0x9875c0
+Liberando memoria... Ptr: "{ptr: 0x9871b0, type: 5Types, obj:0x9870e0}"obj: 0x9870e0
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x9871f0, type: i, obj:0x987130}"obj: 0x987130
+Liberación finalizada.
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x9874a0, type: 5Types, obj:0x9873d0}"obj: 0x9873d0
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x9874e0, type: i, obj:0x987420}"obj: 0x987420
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x986300, type: St6vectorI3PtrSaIS0_EE, obj:0x5ff080}"obj: 0x5ff080
+Liberando memoria... Ptr: "{ptr: 0x986420, type: 5Types, obj:0x986350}"obj: 0x986350
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x986460, type: i, obj:0x9863a0}"obj: 0x9863a0
+Liberación finalizada.
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x986710, type: 5Types, obj:0x986640}"obj: 0x986640
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x986750, type: i, obj:0x986690}"obj: 0x986690
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x9862c0, type: 5Types, obj:0x5ff030}"obj: 0x5ff030
+Liberación finalizada.
+Copia generada de Ptr: {ptr: 0x987bf0, type: 5Types, obj:0x987b20} a Ptr: {ptr: 0x9874d0, type: 5Types, obj:0x987400}
+Copia generada de Ptr: {ptr: 0x9877e0, type: i, obj:0x987b70} a Ptr: {ptr: 0x9865c0, type: i, obj:0x987450}
+Copia generada de Ptr: {ptr: 0x621ba0, type: St6vectorI3PtrSaIS0_EE, obj:0x987760} a Ptr: {ptr: 0x621df0, type: St6vectorI3PtrSaIS0_EE, obj:0x987380}
+star
+get: Ptr: {ptr: 0x9874d0, type: 5Types, obj:0x987400}, with TypeReturn 5Types
+key: 2
+end
+Liberando memoria... Ptr: "{ptr: 0x621df0, type: St6vectorI3PtrSaIS0_EE, obj:0x987380}"obj: 0x987380
+St6vectorI3PtrSaIS0_EE
+value
+value end
+delete
+Liberando memoria... Ptr: "{ptr: 0x9874d0, type: 5Types, obj:0x987400}"obj: 0x987400
+Liberación finalizada.
+Liberando memoria... Ptr: "{ptr: 0x9865c0, type: i, obj:0x987450}"obj: 0x987450
+Liberación finalizada.
+delete end
+Liberación finalizada.
+Ptr Creado: {ptr: 0x621df0, type: 5Types, obj:0x5ff140}
+Ptr Creado: {ptr: 0x987380, type: i, obj:0x5ff190}
+terminate called after throwing an instance of 'std::bad_array_new_length'
+  what():  std::bad_array_new_length
