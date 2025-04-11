@@ -18,8 +18,8 @@
 using namespace std;
 
 enum NodeType {
-    FUNCT_NODE, GRUPO_NODE, VAR_NODE, STR_NODE, REF_NODE,//son los typos de nodos normales
-    /*los siguientes son typos extra*/NULL_NODO, TUPLE_NODE
+    FUNCT_NODE, GRUPO_NODE, VAR_NODE, STR_NODE, REF_NODE, NULL_NODE//son los typos de nodos normales
+    /*los siguientes son typos extra*/, TUPLE_NODE
 };
 
 struct Nodo {
@@ -33,7 +33,7 @@ struct Nodo {
         Nodo* tuple;
     } Content;
 
-    Nodo() : tipo(NULL_NODO) {}
+    Nodo() : tipo(NULL_NODE) {}
 
     ~Nodo() {
         switch (tipo) {
@@ -50,7 +50,7 @@ struct Nodo {
                 break;
             case REF_NODE://estos dos no nesecitan ser liberados
             case STR_NODE:
-            case NULL_NODO://no es ningun tipo
+            case NULL_NODE://no es ningun tipo
             case TUPLE_NODE:// tupla usada de Nodos usanda en funct al hacer reduccion beta
                 break;
         }
@@ -240,7 +240,7 @@ struct VM {
             case STR_NODE: {
                 break;
             }
-            case NULL_NODO: {
+            case NULL_NODE: {
                 break;
             }
             default:{
