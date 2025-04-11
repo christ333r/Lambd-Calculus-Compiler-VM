@@ -16,146 +16,52 @@
 #include <typeindex>
 
 using namespace std;
-struct Ptr {
-    void* ptr = nullptr;                 
-    function<void(void*)> deleter;
-    function<void*(void*)> clonar;
-    type_index Type;
 
-    Ptr() : ptr(nullptr), deleter([](void*) {}), clonar([](void*) { return nullptr; }), Type(typeid(nullptr)) {cout << "Ptr inicial"<< endl;}
-
-    template<typename Any>
-    Ptr(Any* p) 
-        : ptr(p),
-          deleter(p ? [](void* ptr) {
-            cout << typeid(Any).name() << endl;
-            try {
-                cout << "value" << endl;
-                if (typeid(Any) == typeid(int)) {
-                    cout << *static_cast<Any*>(ptr) << endl;
-                }
-                
-                cout << "value end"<< endl;
-            } catch (...) {
-                cout << "the Type no impribible";
-            }
-            cout << "delete" << endl;
-            try {
-                delete static_cast<Any*>(ptr);
-            } catch (const exception& E) {
-                cout << "Error: " << E.what() << endl;
-            } catch (...) {
-                cout << "Error UNKNOWN: " << endl;
-            }
-            
-            cout << "delete end" << endl;
-        } : [](void*) {}),
-          clonar([p](void* ptr) -> void* { return p ? new Any(*static_cast<Any*>(ptr)) : nullptr; }),
-          Type(typeid(Any)) {cout << "Ptr Creado de valor: " << *this << endl;}
-
-    template<typename Any>
-    Ptr(const Any& p) 
-        : ptr(new Any(p)),
-          deleter(ptr ? [](void* ptr) { delete static_cast<Any*>(ptr); } : [](void*) {}),
-          clonar([p](void* ptr) -> void* { return ptr ? new Any(*static_cast<Any*>(ptr)) : nullptr; }),
-          Type(typeid(Any)) {cout << "Ptr Creado: " << *this << endl;}
-
-    Ptr(const Ptr& other) 
-        : deleter(other.deleter), clonar(other.clonar), Type(other.Type) {
-        ptr = (other.ptr) ? other.clonar(other.ptr) : nullptr;
-        cout << "Copia generada de Ptr: " << other << " a Ptr: " << *this  << endl;
-    }
-
-    Ptr& operator=(const Ptr& other) {
-        cout << "copia de asignacion Ptr: " << other << " a ptr: " << *this << endl;
-        if (this != &other) {
-            liberar();
-            deleter = other.deleter;
-            clonar = other.clonar;
-            Type = other.Type;
-            ptr = (other.ptr) ? other.clonar(other.ptr) : nullptr;
-        }
-        cout << "copia de asignacion finalizada" << endl;
-        return *this;
-    }
-
-    Ptr(Ptr&& other) noexcept 
-        : ptr(other.ptr), deleter(move(other.deleter)), clonar(move(other.clonar)), Type(move(other.Type)) {
-        cout << "movimiento Ptr: " << other << " a ptr: " << *this << endl;
-        other.ptr = nullptr; 
-        cout << "movimiento finalizada" << endl;
-    }
-
-    Ptr& operator=(Ptr&& other) noexcept {
-        cout << "movimiento de asignacion Ptr: " << other << " a ptr: " << *this << endl;
-        if (this != &other) {
-            liberar();
-            ptr = other.ptr;
-            deleter = move(other.deleter);
-            clonar = move(other.clonar);
-            Type = move(other.Type);
-            other.ptr = nullptr;
-        }
-        cout << "movimiento de asignacion finalizada" << endl;
-        return *this;
-    }
-    template<typename any>
-    void operator=(any other) {
-        liberar();
-        ptr = new any(other);
-        Type = typeid(any);
-        deleter = [](void* ptr) { delete static_cast<any*>(ptr); };
-        clonar = [](void* ptr) -> void* { return ptr ? new any(*static_cast<any*>(ptr)) : nullptr; };
-    }
-    template<typename Is>
-    bool is() const {
-        return Type == typeid(Is);
-    }
-
-    template<typename Any>
-    Any& get() const {
-        cout << "get: " << "Ptr: "<< *this << ", with TypeReturn " << typeid(Any).name() << endl;
-        if (Type == typeid(Any) && typeid(Any) == typeid(int)) {
-            cout << "value: " << *static_cast<Any*>(ptr) << endl;
-        }
-        return *static_cast<Any*>(ptr);
-    }
-
-    void liberar() {
-        if (ptr) {
-            cout << "Liberando memoria... Ptr: \"" << *this <<"\"" << "obj: " << this << "\n";
-            deleter(ptr);
-            ptr = nullptr;
-            cout << "Liberación finalizada.\n";
-        }
-    }
-
-    ~Ptr() {
-        liberar();
-    }
-
-    friend ostream& operator<<(ostream& os,const Ptr& ptr) {
-        os << "{ptr: " << ptr.ptr << ", type: " << ptr.Type.name() << ", obj:" << &ptr << "}";
-        return os;
-    }
+enum NodeType {
+    FUNCT_NODE, GRUPO_NODE, VAR_NODE, STR_NODE, REF_NODE,//son los typos de nodos normales
+    /*los siguientes son typos extra*/NULL_NODO, TUPLE_NODE
 };
-using dict = unordered_map<string, Ptr>;
-using list = vector<Ptr>;
 
-enum Types {
-    FUNCT,
-    GRUPO,
-    STRING,
-    VAR,
-    REFERENCIA,
-    TUPLE
+struct Nodo {
+    NodeType tipo;
+    union {
+        struct { struct { Nodo** Ptr; int Name; } Var; Nodo* Body; } Funct;
+        struct { Nodo* Left; Nodo* Right; } Grupo;
+        int Str;
+        struct { Nodo** Ptr; int Name; } Var;
+        int Ref;
+        Nodo* tuple;
+    } Content;
+
+    Nodo() : tipo(NULL_NODO) {}
+
+    ~Nodo() {
+        switch (tipo) {
+            case FUNCT_NODE:
+                delete Content.Funct.Var.Ptr;
+                delete Content.Funct.Body;
+                break;
+            case GRUPO_NODE:
+                delete Content.Grupo.Left;
+                delete Content.Grupo.Right;
+                break;
+            case VAR_NODE:
+                delete Content.Var.Ptr;
+                break;
+            case REF_NODE://estos dos no nesecitan ser liberados
+            case STR_NODE:
+            case NULL_NODO://no es ningun tipo
+            case TUPLE_NODE:// tupla usada de Nodos usanda en funct al hacer reduccion beta
+                break;
+        }
+    }
 };
 
 struct VM {
     vector<char> data;
     size_t tell;
     vector<string> Strings;
-    vector<list> Functs;
+    vector<Nodo*> Functs;
     size_t Main;
     VM(
         string file
@@ -236,95 +142,105 @@ struct VM {
         Main = read_uleb128();
         int num_functs = read_uleb128();
         for (int i = 0; i < num_functs; i++) {
-            function<list()> parse_function = [&]() {//Parsea una función lambda almacenada en el binario.
-                list funct;
+            function<Nodo*()> parse_function = [&]() {//Parsea una función lambda almacenada en el binario.
+                Nodo* nodePtr = new Nodo;
+                Nodo& node = *nodePtr;
                 int tag = read_bits(3);
-                switch (tag) {
-                    case 0b010: {
-                        funct.push_back(FUNCT);
-                        funct.push_back(read_uleb128());
-                        funct.push_back(parse_function());
+                switch (tag) {//se utiliza un sistema de banderas para indetificar el tipo
+                    case 0b010: {//funct
+                        node.tipo = FUNCT_NODE;
+                        node.Content.Funct.Var.Name = read_uleb128();
+                        node.Content.Funct.Body = parse_function();
                         break;
                     }
-                    case 0b001: {
-                        funct.push_back(GRUPO);
-                        funct.push_back(parse_function());
-                        funct.push_back(parse_function());
+                    case 0b001: {//grupo
+                        node.tipo = GRUPO_NODE;
+                        node.Content.Grupo.Left = parse_function();
+                        node.Content.Grupo.Right = parse_function();
                         break;
                     }
-                    case 0b100: {
-                        funct.push_back(STRING);
-                        funct.push_back(read_uleb128());
+                    case 0b100: {//string
+                        node.tipo = STR_NODE;
+                        node.Content.Str = read_uleb128();
                         break;
                     }
-                    case 0b011: {
-                        funct.push_back(VAR);
-                        funct.push_back(read_uleb128());
+                    case 0b011: {//variable
+                        node.tipo = VAR_NODE;
+                        node.Content.Var.Name = read_uleb128();
                         break;
                     }
-                    case 0b101: {
-                        funct.push_back(REFERENCIA);
-                        funct.push_back(read_uleb128());
+                    case 0b101: {//referencia
+                        node.tipo = REF_NODE;
+                        node.Content.Ref = read_uleb128();
                         break;
                     }
-                    default: {
-                        cout<< "tag: " << (tag & 0x3) << (tag & 0x2) << (tag & 0x1) << endl;
-                        throw runtime_error("ErrorDev: tag desconocido");
+                    default: {//Error si se decteta bandera desconocida
+                        cout<< "flags: " << (tag & 0x3) << (tag & 0x2) << (tag & 0x1) << endl;
+                        throw runtime_error("ErrorDev: flags desconocido");
                         break;
                     }
                 }
-                return funct;
+                return nodePtr;
             };
             Functs.push_back(parse_function());
         }
     }
     
     void execute() {//Ejecuta la función `Main`.
-        run_function(Functs[Main], {});
+        vector<Nodo*> args;
+        run_function(Functs[Main], args);
     }
     
-    void run_function(list& funct,const list& args,unordered_map<int, list> Context = {}) {
+    void run_function(Nodo*& NodoPtr, vector<Nodo*>& args,unordered_map<int, Nodo*> Context = {}) {
         cout << "star" << endl;
-        Types& key = funct[0].get<Types>();
+        Nodo& Node = *NodoPtr;
+        NodeType key = Node.tipo;
         cout << "key: " << key << endl;
         switch (key) {
-            case GRUPO:{
-                list& left = funct[1].get<list>();
-                list& right = funct[2].get<list>();
-                cout << "run" << endl;
-                run_function(left,{&right}, Context);
-                if (left[0].get<Types>() == TUPLE) {
-                    funct = left[1].get<list>();
+            case GRUPO_NODE: {
+                Nodo* left = Node.Content.Grupo.Left;
+                Nodo* right = Node.Content.Grupo.Right;
+                args.push_back(right);
+                run_function(left,args, Context);
+                if (left->tipo == TUPLE_NODE) {
+                    NodoPtr = left->Content.tuple;
                 } else {
-                    run_function(right, {}, Context);
+                    args.pop_back();
+                    run_function(right, args, Context);
                 }
                 break;
             }
-            case REFERENCIA:{
-                run_function(Functs[funct[1].get<int>()], args, Context);
+            case REF_NODE:{
+                run_function(Functs[Node.Content.Ref], args, Context);
                 break;
             }
-            case VAR:{
-                int& var = funct[1].get<int>();
+            case VAR_NODE:{
+                int& var = Node.Content.Var.Name;
                 if (Context.find(var) != Context.end()) {
-                    funct = Context[var];
+                    NodoPtr = Context[var];
                 }
                 break;
             }
-            case FUNCT:{
-                int& var = funct[1].get<int>();
-                list& body = funct[2].get<list>();
-                unordered_map<int, list> New = Context;//crear una copia
+            case FUNCT_NODE:{
+                int& var = Node.Content.Funct.Var.Name;
+                Nodo* body = Node.Content.Funct.Body;
+                unordered_map<int, Nodo*> New = Context;//crear una copia
                 if (args.size() >= 1){
-                    New[var] = args[0].get<list>();
-                    run_function(body, {}, New);
-                    funct = {TUPLE, body};
+                    New[var] = args.back();
+                    args.pop_back();
+                    run_function(body, args, New);
+                    Nodo* NodeNew = new Nodo;
+                    NodeNew->tipo = TUPLE_NODE;
+                    NodeNew->Content.tuple = body;
+                    NodoPtr = NodeNew;
                 }
                 run_function(body, args, Context);
-                funct = {FUNCT,var, body};
                 break;
             }
-            case STRING: {
+            case STR_NODE: {
+                break;
+            }
+            case NULL_NODO: {
                 break;
             }
             default:{
@@ -336,27 +252,30 @@ struct VM {
         cout << "end" << endl;
     }
     
-    string ToText(list& Ast) {
+    string ToText(Nodo*& Ast) {
         string Text = "";
-        Types& key = Ast[0].get<Types>();
+        NodeType& key = Ast->tipo;
         cout << "key: " << key << endl;
         switch (key) {
-            case GRUPO: {
-                Text += "(" + ToText(Ast[1].get<list>()) + "," + ToText(Ast[2].get<list>()) + ")";
+            case GRUPO_NODE: {
+                Text += "(" + ToText(Ast->Content.Grupo.Left) + ", " + ToText(Ast->Content.Grupo.Right) + ")";
                 break;
             }
-            case STRING:
-            case VAR: { 
-                Text += "\"" + Strings[Ast[1].get<int>()] + "\"";
+            case STR_NODE: { 
+                Text += "\"" + Strings[Ast->Content.Str] + "\"";
                 break;
             }
-            case REFERENCIA:{
-                Text += "'" + Ast[1].get<int>();
+            case VAR_NODE: { 
+                Text += "\"" + Strings[Ast->Content.Var.Name] + "\"";
+                break;
+            }
+            case REF_NODE:{
+                Text += "'" + Ast->Content.Ref;
                 Text += "'";
                 break;
             }
-            case FUNCT: {
-                Text += "'f\"" + Strings[Ast[1].get<int>()] + "\"." + ToText(Ast[2].get<list>());
+            case FUNCT_NODE: {
+                Text += "'f\"" + Strings[Ast->Content.Funct.Var.Name] + "\"." + ToText(Ast->Content.Funct.Body);
                 break;
             }
             default: {
