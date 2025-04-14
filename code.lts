@@ -1,2 +1,6 @@
-Error = f"string"."string";
-Main = ('Error',"Hola");     
+//el codigo fuente
+true = f"a".f"b"."a";
+false = f"a".f"b"."b";
+is_0 = f"n".(("n",f"x".'false'),'true');
+1 = f"f".f"x".("f","x");
+Main = ('is_0','1');
