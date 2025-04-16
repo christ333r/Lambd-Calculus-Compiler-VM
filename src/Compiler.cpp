@@ -372,24 +372,19 @@ struct Compiler {
             int temp = 0;
             Pack(&temp, 1);
         }
-        uleb128(referen.size());
-        unordered_map<string,int> Refen;
-        cout << "invirtiendo referencias..." << endl;
-        for (auto& [key, val] : referen) Refen[key] = val;
-        cout << "exportando referencias..." << endl;
-        for (auto& [str,_] : referen) {
-            Pack(str.data(), str.size());
-            int temp = 0;
-            Pack(&temp, 1);
-        }
-        uleb128(referen.at("Main"));
         uleb128(Ast.size());
         vector<string> Keys;
         cout << "invirtiendo functiones..." << endl;
         for (auto& [key, val] : Ast) Keys.insert(Keys.begin(),key);
+        cout << "sizeAst: " << Ast.size() << endl;
         cout << "size: " << Keys.size() << endl;
         cout << "Exportando functiones..." << endl;
         for (string& key : Keys) {
+            cout << key << ": " << referen[key] << endl;
+            uleb128(referen[key]);
+            Pack(key.data(),key.size());
+            int temp = 0;
+            Pack(&temp, 1);
             Nodo* Node = Ast[key];
             cout << "Hola" << endl;
             function<void(Nodo*)> exportFunct = [&exportFunct,&writebits,&uleb128](Nodo* NodePtr) {

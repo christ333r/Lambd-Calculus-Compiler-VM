@@ -24,11 +24,12 @@ enum NodeType {
 
 struct Nodo {
     NodeType tipo;
+    struct StructVar {Nodo** Ptr; int Name; int ID; };
     union {
-        struct { struct { Nodo** Ptr; int Name; } Var; Nodo* Body; } Funct;
+        struct {StructVar Var; Nodo* Body; } Funct;
         struct { Nodo* Left; Nodo* Right; } Grupo;
         int Str;
-        struct { Nodo** Ptr; int Name; } Var;
+        StructVar Var;
         int Ref;
         Nodo* tuple;
     } Content;
@@ -36,6 +37,7 @@ struct Nodo {
     Nodo() : tipo(NULL_NODE) {}
 
     ~Nodo() {
+        cout << "liberando this: " << this << endl;
         switch (tipo) {
             case FUNCT_NODE:
                 delete Content.Funct.Var.Ptr;
@@ -56,41 +58,100 @@ struct Nodo {
         }
     }
 
-    Nodo* copy() const {
+    Nodo* copy(unordered_map<int, Nodo**> Context = {}) {
         Nodo* nuevo = new Nodo;
         nuevo->tipo = tipo;
         switch (tipo) {
-            case FUNCT_NODE:
+            case FUNCT_NODE:{
+                nuevo->Content.Funct.Var.ID = Content.Funct.Var.ID;
+                Nodo** SharedNode = new Nodo*;
+                *SharedNode = new Nodo;
+                Context[nuevo->Content.Funct.Var.ID] = SharedNode;
+                nuevo->Content.Funct.Var.Ptr = SharedNode;
                 nuevo->Content.Funct.Var.Name = Content.Funct.Var.Name;
-                nuevo->Content.Funct.Body = Content.Funct.Body->copy();
+                nuevo->Content.Funct.Body = Content.Funct.Body->copy(Context);
                 break;
-            case GRUPO_NODE:
-                nuevo->Content.Grupo.Left = Content.Grupo.Left->copy();
-                nuevo->Content.Grupo.Right = Content.Grupo.Right->copy();
+            }
+            case GRUPO_NODE:{
+                nuevo->Content.Grupo.Left = Content.Grupo.Left->copy(Context);
+                nuevo->Content.Grupo.Right = Content.Grupo.Right->copy(Context);
                 break;
-            case VAR_NODE:
+            }
+            case VAR_NODE:{
+                nuevo->Content.Var.ID = Content.Var.ID;
+                nuevo->Content.Var.Ptr = Context[nuevo->Content.Var.ID];
                 nuevo->Content.Var.Name = Content.Var.Name;
                 break;
-            case REF_NODE:
+            }
+            case REF_NODE:{
                 nuevo->Content.Ref = Content.Ref;
                 break;
-            case STR_NODE:
+            }
+            case STR_NODE:{
                 nuevo->Content.Str = Content.Str;
                 break;
-            case TUPLE_NODE:
+            }
+            case TUPLE_NODE:{
                 throw runtime_error("ErrorDev: una tupla no es parte de los tipos disponibles de lambd no deberia copiarse");
                 break;
-            case NULL_NODE:
+            }
+            case NULL_NODE:{
                 throw runtime_error("ErrorDev: verifique codigo por que se intento copiar un null");
                 break;
+            }
+            default: {
+                cout << "tipo:" << tipo << endl;
+                throw runtime_error("ErrorDev:Tipo desconocido, intento de copia de tipo desconocido");
+            }
         }
         return nuevo;
+    }
+
+    friend ostream& operator<<(ostream& os, Nodo& Node) {
+        os << "{ tipo:"<< Node.tipo << ", ";
+        switch (Node.tipo) {
+            case FUNCT_NODE:{
+                os << "VarIdx: "<<Node.Content.Funct.Var.Name <<", body: " << *Node.Content.Funct.Body;
+                break;
+            }
+            case GRUPO_NODE:{
+                os << "left: "<<*Node.Content.Grupo.Left<<", right: " << *Node.Content.Grupo.Right;
+                break;
+            }
+            case VAR_NODE:{
+                os << "VarIdx: "<<Node.Content.Var.Name;
+                break;
+            }
+            case STR_NODE:{
+                os << "StrIdx: "<<Node.Content.Str;
+                break;
+            }
+            case REF_NODE:{
+                os << "Ref: "<<Node.Content.Ref;
+                break;
+            }
+            case NULL_NODE:{
+                os << "NULL";
+                break;
+            }
+            case TUPLE_NODE:{
+                os << "TUPLE: "<< *Node.Content.tuple;
+                break;
+            }
+            default: {
+                os << "ErrorDev: Tipo no esta en definitiones";
+                break;
+            }
+        }
+        os << " }";
+        return os;
     }
 };
 
 struct VM {
     vector<char> data;
     size_t tell;
+    size_t countID = 0;
     vector<string> Strings;
     vector<string> reference;
     vector<Nodo*> Functs;
@@ -171,36 +232,71 @@ struct VM {
             }
             Strings.push_back(string_data);
         }
-        int num_referen = read_uleb128();
-        for (int _ = 0; _ < num_referen; _++) {
-            string string_data = "";
-            while (true) {
-                uint8_t Byte = read_bytes(1)[0];
-                if (Byte == 0x00){//Fin del string
-                    break;
-                }
-                string_data += static_cast<char>(Byte);
-            }
-            reference.push_back(string_data);
-        }
-        Main = read_uleb128();
         int num_functs = read_uleb128();
+        Functs.resize(num_functs);
+        reference.resize(num_functs);
         for (int i = 0; i < num_functs; i++) {
-            function<Nodo*()> parse_function = [&]() {//Parsea una función lambda almacenada en el binario.
+            struct Tuple{
+                Nodo** Node;
+                int ID;
+                void operator=(Tuple&& other) {
+                    Node =  other.Node;
+                    ID = other.ID;
+                }
+
+                void operator=(const Tuple& other) {
+                    Node =  other.Node;
+                    ID = other.ID;
+                }
+
+                void operator=(const tuple<Nodo**, int>& other) {
+                    Node = get<0>(other);
+                    ID = get<1>(other);
+                }
+
+                string GetText() {
+                    stringstream ss;
+                    ss << "( " << Node << ", " << ID << " )";
+                    return ss.str();
+                }
+            };
+            unordered_map<int, Tuple> ContextEmpty;
+            function<Nodo*(unordered_map<int, Tuple>&)> parse_function = [&](unordered_map<int, Tuple>& Context) {//Parsea una función lambda almacenada en el binario.
+                
                 Nodo* nodePtr = new Nodo;
                 Nodo& node = *nodePtr;
                 int tag = read_bits(3);
                 switch (tag) {//se utiliza un sistema de banderas para indetificar el tipo
                     case 0b010: {//funct
                         node.tipo = FUNCT_NODE;
+                        Nodo** sharedNode = new Nodo*;
+                        *sharedNode = new Nodo;
+                        int ID = countID;
+                        countID++;
+                        node.Content.Funct.Var.Ptr = sharedNode;
                         node.Content.Funct.Var.Name = read_uleb128();
-                        node.Content.Funct.Body = parse_function();
+                        int& idx = node.Content.Funct.Var.Name;
+                        bool BPreviousTuple = false;
+                        Tuple PreviousTuple;
+                        if (Context.find(idx) != Context.end()) {
+                            PreviousTuple = Context[idx];
+                            BPreviousTuple = true;
+                        }
+                        node.Content.Funct.Var.ID = ID;
+                        tuple New = {sharedNode, ID};
+                        Context[idx] = New;
+                        node.Content.Funct.Body = parse_function(Context);
+                        if (BPreviousTuple) {
+                            Context[idx] = PreviousTuple;
+                            break;
+                        }
+                        Context.erase(idx);
                         break;
                     }
                     case 0b001: {//grupo
                         node.tipo = GRUPO_NODE;
-                        node.Content.Grupo.Left = parse_function();
-                        node.Content.Grupo.Right = parse_function();
+                        node.Content.Grupo.Left = parse_function(Context);
+                        node.Content.Grupo.Right = parse_function(Context);
                         break;
                     }
                     case 0b100: {//string
@@ -211,6 +307,8 @@ struct VM {
                     case 0b011: {//variable
                         node.tipo = VAR_NODE;
                         node.Content.Var.Name = read_uleb128();
+                        node.Content.Var.Ptr = Context[node.Content.Var.Name].Node;
+                        node.Content.Var.ID = Context[node.Content.Var.Name].ID;
                         break;
                     }
                     case 0b101: {//referencia
@@ -226,57 +324,75 @@ struct VM {
                 }
                 return nodePtr;
             };
-            Functs.push_back(parse_function());
+            string name_funct = "";
+            int idx = read_uleb128();
+            while (true) {
+                uint8_t Byte = read_bytes(1)[0];
+                if (Byte == 0x00){//Fin del string
+                    break;
+                }
+                name_funct += static_cast<char>(Byte);
+            }
+            if (name_funct == "Main") {
+                Main = idx;
+            }
+            
+            reference[idx] = name_funct;
+            Functs[idx] = parse_function(ContextEmpty);
         }
     }
     
     void execute() {//Ejecuta la función `Main`.
         vector<Nodo*> args;
-        Functs[Main] = run_function(Functs[Main], args);
+        run_function(Functs[Main], args);
     }
     
-    Nodo* run_function(Nodo*& NodoPtr, vector<Nodo*>& args,unordered_map<int, Nodo*> Context = {}) {
+    void run_function(Nodo*& NodoPtr, vector<Nodo*>& args) {
         Nodo& Node = *NodoPtr;
         NodeType key = Node.tipo;
         switch (key) {
             case GRUPO_NODE: {//1
                 Nodo*& left = Node.Content.Grupo.Left;
                 Nodo*& right = Node.Content.Grupo.Right;
-                args.push_back(right);
-                left = run_function(left,args, Context);
+                if (left->tipo == FUNCT_NODE) {
+                    args.push_back(right);
+                }
+                run_function(left,args);
                 if (left->tipo == TUPLE_NODE) {
                     NodoPtr = left->Content.tuple;
-                } else {
-                    args.pop_back();
-                    right = run_function(right, args, Context);
                 }
                 break;
             }
             case REF_NODE:{//4
-                NodoPtr = run_function(Functs[Node.Content.Ref], args, Context);
+                Nodo* NodoFunct = Functs[Node.Content.Ref]->copy();//crear una copia para evitar auto referencia
+                run_function(NodoFunct, args);
+                NodoPtr = NodoFunct;
                 break;
             }
             case VAR_NODE:{//2
-                int& var = Node.Content.Var.Name;
-                if (Context.find(var) != Context.end()) {
-                    NodoPtr = Context[var];
+                Nodo**& var = Node.Content.Var.Ptr;
+                if ((**var).tipo != NULL_NODE) {
+                    NodoPtr = (*var)->copy();
                 }
                 break;
             }
             case FUNCT_NODE:{//0
-                int& var = Node.Content.Funct.Var.Name;
-                Nodo*& body = Node.Content.Funct.Body;
-                unordered_map<int, Nodo*> New = Context;//crear una copia
+                Nodo**& var = NodoPtr->Content.Funct.Var.Ptr;
+                Nodo*& body = NodoPtr->Content.Funct.Body;
                 if (args.size() >= 1){
-                    New[var] = args.back();
+                    *var = args.back();
                     args.pop_back();
-                    body = run_function(body, args, New);
+                    run_function(body, args);
                     Nodo* NodeNew = new Nodo;
                     NodeNew->tipo = TUPLE_NODE;
                     NodeNew->Content.tuple = body;
                     NodoPtr = NodeNew;
+                    break;
                 }
-                body = run_function(body, args, Context);
+                Nodo* Temp = new Nodo;
+                *NodoPtr->Content.Funct.Var.Ptr = Temp;
+                *NodoPtr->Content.Funct.Var.Ptr = Temp;
+                run_function(body, args);
                 break;
             }
             case STR_NODE: {//3
@@ -291,46 +407,68 @@ struct VM {
                 break;
             }
         }
-        
-        return NodoPtr;
     }
     
     string ToText(Nodo*& Ast) {
-        string Text = "";
+        stringstream Text;
         NodeType& key = Ast->tipo;
         switch (key) {
             case GRUPO_NODE: {
-                Text += "(" + ToText(Ast->Content.Grupo.Left) + ", " + ToText(Ast->Content.Grupo.Right) + ")";
+                Text << "(" + ToText(Ast->Content.Grupo.Left) << ", " << ToText(Ast->Content.Grupo.Right) + ")";
                 break;
             }
-            case STR_NODE: { 
-                Text += "\"" + Strings[Ast->Content.Str] + "\"";
+            case STR_NODE: {
+                Text << "\"" << Strings[Ast->Content.Str] << "\"";
                 break;
             }
-            case VAR_NODE: { 
-                Text += "\"" + Strings[Ast->Content.Var.Name] + "\"";
+            case VAR_NODE: {
+                //Text << "(" << Ast->Content.Var.ID << ")";
+                //Text << "(" << **Ast->Content.Var.Ptr << "(" << *Ast->Content.Var.Ptr << "(" << Ast->Content.Var.Ptr << ")))";
+                Text << "\"" << Strings[Ast->Content.Var.Name] << "\"";
                 break;
             }
             case REF_NODE:{
-                Text += "'" + Ast->Content.Ref;
-                Text += "'";
+                Text << "'" << reference[Ast->Content.Ref] << "'";
                 break;
             }
             case FUNCT_NODE: {
-                Text += "'f\"" + Strings[Ast->Content.Funct.Var.Name] + "\"." + ToText(Ast->Content.Funct.Body);
+                Text << "f";
+                //Text << "(" << Ast->Content.Funct.Var.ID << ")" ;
+                //Text << "(" << **Ast->Content.Funct.Var.Ptr << "(" << *Ast->Content.Funct.Var.Ptr << "(" << Ast->Content.Funct.Var.Ptr << ")))";
+                Text << "\"" << Strings[Ast->Content.Funct.Var.Name] << "\"." << ToText(Ast->Content.Funct.Body);
+                break;
+            }
+            case TUPLE_NODE: {
+                cout << *Ast->Content.tuple << endl;
+                throw runtime_error("ErrorDev: se decteto un TUPLE_NODE, desarollador verifique el que todo este correctamente");
                 break;
             }
             default: {
-                cout << "typo: " << key << endl;
-                throw runtime_error("Error: typo desconocido en ToText");
+                cout << "typo: " << key << "ast:" << *Ast << endl;
+                cout << "Functs: " << endl;
+                for(Nodo*& node : Functs) {
+                    cout << ", "<< *node << endl;
+                }
+                
+                throw runtime_error("ErrorDev: typo desconocido en ToText");
                 break;
             }
         }
-        return Text;
+        return Text.str();
     };
 
     string getString() {
         return ToText(Functs[Main]);
+    }
+    
+    vector<array<string,2>> getAllFuncts() {
+        vector<array<string,2>> FunctsText;
+        int i = 0;
+        for(Nodo*& Node : Functs) {
+            FunctsText.push_back({reference[i], ToText(Node)});
+            i++;
+        }
+        return FunctsText;
     }
 
     friend ostream& operator<<(ostream& os, VM&other) {
@@ -342,6 +480,10 @@ struct VM {
 int main() {
     VM Vm("../Text.lame");
     cout << Vm << endl;
+    cout << "Functiones definidas:" << endl;
+    for(array<string, 2>& str : Vm.getAllFuncts()) {
+        cout << str[0] << ": " << str[1] << endl;
+    }
     cout << "calculando resultado..." << endl;
     while (true) {
         string previus = Vm.getString();
