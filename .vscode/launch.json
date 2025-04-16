@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug lts",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/VM.exe",
+            "args": ["${fileDirname}/${fileBasenameNoExtension}.lame"],
+            "stopAtEntry": false,
+            "externalConsole": true,
+            "preLaunchTask": "compilar lts",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
+  

@@ -1,0 +1,36 @@
+{
+    "scopeName": "source.lts",
+    "name": "LTS",
+    "fileTypes": ["lts"],
+    "patterns": [
+        {
+            "name": "keyword.control.lts",
+            "match": "f\\\"[^\"]+\\\"\\."
+        },
+        {
+            "name": "variable.assignment.lts",
+            "match": "\\b\\w+\\b(?=\\s*=)"
+        },
+        {
+            "name": "punctuation.terminator.lts",
+            "match": ";"
+        },
+        {
+            "name": "string.quoted.double.lts",
+            "match": "\\\"[^\\\"]*\\\""
+        },
+        {
+            "name": "string.quoted.single.lts",
+            "match": "'[^']*'"
+        },
+        {
+            "name": "comment.line.double-slash.lts",
+            "match": "//.*$"
+        },
+        {
+            "name": "comment.block.lts",
+            "begin": "/\\*",
+            "end": "\\*/"
+        }
+    ]
+}

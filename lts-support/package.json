@@ -1,0 +1,28 @@
+{
+    "name": "lts-language-support",
+    "displayName": "LTS Language Support",
+    "description": "Soporte de colores y sintaxis para LTS",
+    "version": "0.0.3",
+    "publisher": "christ-dev",
+    "engines": {
+      "vscode": "^1.50.0"
+    },
+    "contributes": {
+      "languages": [
+        {
+          "id": "lts",
+          "aliases": ["LTS", "lts"],
+          "extensions": [".lts"],
+          "configuration": "./lts-support/language-configuration.json"
+        }
+      ],
+      "grammars": [
+        {
+          "language": "lts",
+          "scopeName": "source.lts",
+          "path": "./lts-support/syntaxis/lts.tmLanguage.json"
+        }
+      ]
+    }
+  }
+  
