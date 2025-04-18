@@ -1,7 +1,4 @@
-true = f"a".f"b"."a";
-false = f"a".f"b"."b";
-not = f"b".(("b", 'false'), 'true');
-
-Test1 = ('not', 'true');
-Test2 = ('not', 'false');
-Main = 'Test2';
+//comentario
+1 = f"f".f"x".("f","x");
++ = f"a".f"b".f"f".f"x".(("a","f"),(("b","f"),"x"));
+Main = (('+','1'),'1');

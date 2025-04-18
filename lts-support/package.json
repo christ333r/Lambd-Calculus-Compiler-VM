@@ -1,28 +1,32 @@
 {
-    "name": "lts-language-support",
-    "displayName": "LTS Language Support",
-    "description": "Soporte de colores y sintaxis para LTS",
-    "version": "0.0.3",
-    "publisher": "christ-dev",
-    "engines": {
-      "vscode": "^1.50.0"
-    },
-    "contributes": {
-      "languages": [
-        {
-          "id": "lts",
-          "aliases": ["LTS", "lts"],
-          "extensions": [".lts"],
-          "configuration": "./lts-support/language-configuration.json"
-        }
-      ],
-      "grammars": [
-        {
-          "language": "lts",
-          "scopeName": "source.lts",
-          "path": "./lts-support/syntaxis/lts.tmLanguage.json"
-        }
-      ]
-    }
+  "name": "lts-support",
+  "displayName": "Lts-Support",
+  "description": "color y gramatica para lts",
+  "publisher": "christ-dev",
+  "version": "0.0.5",
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "LTS",
+      "aliases": ["Lts", "LTS"],
+      "extensions": [".lts"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "LTS",
+      "scopeName": "source.lts",
+      "path": "./syntaxes/LTS.tmLanguage.json"
+    }],
+    "snippets": [
+      {
+        "language": "LTS",
+        "path": "./snippets/lts.json"
+      }
+    ]
   }
-  
+}

@@ -1,0 +1,81 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "lambd-computer",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#referen"
+		},
+		{
+			"include": "#function"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"name": "keyword.other", 
+			"match": "\\bf\\b"
+		},
+		"strings": {
+			"name": "string.quoted.double",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape",
+					"match": "\\\\."
+				}
+			]
+		},
+		"referen": {
+			"name": "string.quoted.single",
+			"begin": "\\'",
+			"end": "\\'",
+			"patterns": [
+				{
+					"name": "constant.character.escape",
+					"match": "\\\\."
+				}
+			]
+		},
+		"function": {
+			"patterns": [
+				{
+					"name": "variable.other",
+					"match": "^\\s*(\\w+)(?=\\s*=)"
+				},
+				{
+					"name" : "punctuation.terminator.statement",
+					"match": ";"
+				}
+			]
+		},
+		"comentario":{
+			"name":"comment.line.double-slash",
+			"begin": "//",
+			"end": "\\n",
+			"patterns": [
+				{
+					"name": "constant.character.escape",
+					"match": "\\\\."
+				}
+			]
+		},
+		"ComentarioLines":{
+			"name":"comment.block",
+			"begin": "/*",
+			"end": "*/",
+			"patterns": [
+				{
+					"name": "constant.character.escape",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.lts"
+}

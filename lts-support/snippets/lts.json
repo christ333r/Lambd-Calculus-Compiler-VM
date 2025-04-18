@@ -1,0 +1,16 @@
+{
+	"lambdInstacia": {
+		"prefix": "f.",
+		"body": [
+			"f\"$1\".$2"
+		],
+		"description": "lambd rapida"
+	},
+	"newFunction": {
+		"prefix": "/F",
+		"body": [
+			"$1 = $2;"
+		],
+		"description": "definion de function rapida"
+	}
+}

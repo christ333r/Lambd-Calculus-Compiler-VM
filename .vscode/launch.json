@@ -2,11 +2,49 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(dbg) cpp(standard)",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerPath": "C:\\\\w64devkit\\\\bin\\\\gdb.exe",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "preLaunchTask": "C/C++: g++.exe build active file",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "(dbg) cpp(Compiler)",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerPath": "C:\\\\w64devkit\\\\bin\\\\gdb.exe",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": ["./code.lts", "-f","-o","./code.lame"],
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "preLaunchTask": "C/C++: g++.exe build active file",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "(dbg) cpp(VM)",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerPath": "C:\\\\w64devkit\\\\bin\\\\gdb.exe",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": ["./Test.lame", "-d", "0"],
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "preLaunchTask": "C/C++: g++.exe build active file",
+            "cwd": "${workspaceFolder}"
+        },
+        {
             "name": "Debug lts",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/src/VM.exe",
-            "args": ["${fileDirname}/${fileBasenameNoExtension}.lame"],
+            "args": [
+                "${fileDirname}/${fileBasenameNoExtension}.lame",
+            ],
             "stopAtEntry": false,
             "externalConsole": true,
             "preLaunchTask": "compilar lts",
@@ -14,4 +52,3 @@
         }
     ]
 }
-  

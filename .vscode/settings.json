@@ -1,2 +1,18 @@
 {
+    "files.associations": {
+        "*.lts": "lts",
+        "fstream": "cpp",
+        "tuple": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp",
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "memory": "cpp",
+        "format": "cpp",
+        "istream": "cpp",
+        "functional": "cpp",
+        "utility": "cpp",
+        "variant": "cpp",
+        "stdexcept": "cpp"
+    }
 }

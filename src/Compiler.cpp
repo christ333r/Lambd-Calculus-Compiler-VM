@@ -443,14 +443,22 @@ int main(int size, const char* args[]) {
         throw runtime_error("debe propocionar argumentos");
         return 0;
     }
+    string DirLame = "./Program.lame";
     array<int, 3> op;//opciones de compilacion
     if (size > 2) {
         for(int i = 2; i < size; i++) {
             string str = args[i];
             if (str == "-f") {
                 op[0] = true;
+            } else if (str == "-o") {
+                i++;
+                if (i < size) {
+                    DirLame = args[i];
+                }
             } else {
-                throw runtime_error("marcador indefinido: " + str + ".");
+                stringstream Error;
+                Error << "marcador indefinido: " << str << ".";
+                throw runtime_error(Error.str());
                 return 1;
             }
         }
@@ -468,16 +476,20 @@ int main(int size, const char* args[]) {
         Code_Example = buffer.str();
     }
     Compiler compiler(Code_Example);
-    ofstream file("../Text.lame", ios::binary);
+    ofstream file(DirLame, ios::binary);
     if (file.fail()) {
         throw runtime_error("Error: al abrir el archivo");
         return 0;
     }
     vector<uint8_t> Data;
     compiler.Export(Data);
-    cout << "escribiendo exportacion al archivo Text.lame" << endl;
+    cout << "escribiendo exportacion al archivo" << DirLame << endl;
     file.write(reinterpret_cast<const char*>(Data.data()),Data.size());
     file.close();
+    if (file.fail()) {
+        throw runtime_error("Error: al cerrar el archivo");
+        return 0;
+    }
     cout << "Compilacion finaliza." << endl;
     return 0;
 }

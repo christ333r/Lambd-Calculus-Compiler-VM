@@ -58,28 +58,33 @@ struct Nodo {
         }
     }
 
-    Nodo* copy(unordered_map<int, Nodo**> Context = {}) {
+    Nodo* copy(unordered_map<int, tuple<Nodo**, int>> Context, size_t& countID) {
         Nodo* nuevo = new Nodo;
         nuevo->tipo = tipo;
         switch (tipo) {
             case FUNCT_NODE:{
-                nuevo->Content.Funct.Var.ID = Content.Funct.Var.ID;
+                nuevo->Content.Funct.Var.ID = countID;
+                countID++;
                 Nodo** SharedNode = new Nodo*;
                 *SharedNode = new Nodo;
-                Context[nuevo->Content.Funct.Var.ID] = SharedNode;
+                Context[Content.Funct.Var.ID] = {SharedNode, nuevo->Content.Funct.Var.ID};
                 nuevo->Content.Funct.Var.Ptr = SharedNode;
                 nuevo->Content.Funct.Var.Name = Content.Funct.Var.Name;
-                nuevo->Content.Funct.Body = Content.Funct.Body->copy(Context);
+                nuevo->Content.Funct.Body = Content.Funct.Body->copy(Context, countID);
                 break;
             }
             case GRUPO_NODE:{
-                nuevo->Content.Grupo.Left = Content.Grupo.Left->copy(Context);
-                nuevo->Content.Grupo.Right = Content.Grupo.Right->copy(Context);
+                nuevo->Content.Grupo.Left = Content.Grupo.Left->copy(Context, countID);
+                nuevo->Content.Grupo.Right = Content.Grupo.Right->copy(Context, countID);
                 break;
             }
             case VAR_NODE:{
-                nuevo->Content.Var.ID = Content.Var.ID;
-                nuevo->Content.Var.Ptr = Context[nuevo->Content.Var.ID];
+                if (Context.find(Content.Var.ID) == Context.end()) {//la Variable esta suelta(sin padre function que la defina)
+                    nuevo = this;//pasar sin modificar
+                    break;
+                }
+                nuevo->Content.Var.Ptr = get<0>(Context[Content.Var.ID]);
+                nuevo->Content.Var.ID = get<1>(Context[Content.Var.ID]);
                 nuevo->Content.Var.Name = Content.Var.Name;
                 break;
             }
@@ -156,9 +161,10 @@ struct VM {
     vector<string> reference;
     vector<Nodo*> Functs;
     size_t Main;
+    signed char Debug;
     VM(
-        string file
-    ) : tell(0), Main(0){
+        string file, signed char debug
+    ) : tell(0), Main(0), Debug(debug) {
         ifstream File(file, ios::binary | ios::ate);
         if (!File.is_open() || !File) {
             throw runtime_error("Error: archivo no encontrado o invalido");
@@ -354,6 +360,8 @@ struct VM {
             case GRUPO_NODE: {//1
                 Nodo*& left = Node.Content.Grupo.Left;
                 Nodo*& right = Node.Content.Grupo.Right;
+                vector<Nodo*> voidargs;
+                run_function(right, voidargs);
                 if (left->tipo == FUNCT_NODE) {
                     args.push_back(right);
                 }
@@ -364,7 +372,7 @@ struct VM {
                 break;
             }
             case REF_NODE:{//4
-                Nodo* NodoFunct = Functs[Node.Content.Ref]->copy();//crear una copia para evitar auto referencia
+                Nodo* NodoFunct = Functs[Node.Content.Ref]->copy({},countID);//crear una copia para evitar auto referencia
                 run_function(NodoFunct, args);
                 NodoPtr = NodoFunct;
                 break;
@@ -372,13 +380,13 @@ struct VM {
             case VAR_NODE:{//2
                 Nodo**& var = Node.Content.Var.Ptr;
                 if ((**var).tipo != NULL_NODE) {
-                    NodoPtr = (*var)->copy();
+                    NodoPtr = (*var)->copy({},countID);
                 }
                 break;
             }
             case FUNCT_NODE:{//0
-                Nodo**& var = NodoPtr->Content.Funct.Var.Ptr;
-                Nodo*& body = NodoPtr->Content.Funct.Body;
+                Nodo**& var = Node.Content.Funct.Var.Ptr;
+                Nodo*& body = Node.Content.Funct.Body;
                 if (args.size() >= 1){
                     *var = args.back();
                     args.pop_back();
@@ -389,9 +397,6 @@ struct VM {
                     NodoPtr = NodeNew;
                     break;
                 }
-                Nodo* Temp = new Nodo;
-                *NodoPtr->Content.Funct.Var.Ptr = Temp;
-                *NodoPtr->Content.Funct.Var.Ptr = Temp;
                 run_function(body, args);
                 break;
             }
@@ -422,9 +427,21 @@ struct VM {
                 break;
             }
             case VAR_NODE: {
-                //Text << "(" << Ast->Content.Var.ID << ")";
-                //Text << "(" << **Ast->Content.Var.Ptr << "(" << *Ast->Content.Var.Ptr << "(" << Ast->Content.Var.Ptr << ")))";
-                Text << "\"" << Strings[Ast->Content.Var.Name] << "\"";
+                switch (Debug) {
+                    case -1:
+                        Text << "\"" << Strings[Ast->Content.Var.Name] << "\"";
+                        break;
+                    case 0:
+                        Text << "\"" << Ast->Content.Var.ID << "\"";
+                        break;
+                    case 1:
+                        Text << "(" << **Ast->Content.Var.Ptr << ")";
+                    case 2:
+                        Text << "(" << **Ast->Content.Var.Ptr << "(" << *Ast->Content.Var.Ptr << "(" << Ast->Content.Var.Ptr << ")))";
+                    default:
+                        Text << "\"" << Strings[Ast->Content.Var.Name] << "\"";
+                        break;
+                }
                 break;
             }
             case REF_NODE:{
@@ -433,9 +450,26 @@ struct VM {
             }
             case FUNCT_NODE: {
                 Text << "f";
-                //Text << "(" << Ast->Content.Funct.Var.ID << ")" ;
-                //Text << "(" << **Ast->Content.Funct.Var.Ptr << "(" << *Ast->Content.Funct.Var.Ptr << "(" << Ast->Content.Funct.Var.Ptr << ")))";
-                Text << "\"" << Strings[Ast->Content.Funct.Var.Name] << "\"." << ToText(Ast->Content.Funct.Body);
+                switch (Debug) {
+                    case -1:
+                        Text << "\"" << Strings[Ast->Content.Funct.Var.Name] << "\"";
+                        break;
+                    case 0:
+                        Text << "(" << Ast->Content.Funct.Var.ID << ")" ;
+                        break;
+                    case 1:
+                        Text << "(" << **Ast->Content.Funct.Var.Ptr << ")";
+                    case 2:
+                        Text << "(" << **Ast->Content.Funct.Var.Ptr << "(" << *Ast->Content.Funct.Var.Ptr << "(" << Ast->Content.Funct.Var.Ptr << ")))";
+                    case 3:
+                        Text << "(" << Ast->Content.Funct.Var.ID << "(" << **Ast->Content.Funct.Var.Ptr << "(" << *Ast->Content.Funct.Var.Ptr << "(" << Ast->Content.Funct.Var.Ptr << "))))";
+                    case 4:
+                        Text << "(" << Ast->Content.Funct.Var.ID << "(" << **Ast->Content.Funct.Var.Ptr << "))";
+                    default:
+                        Text << "\"" << Strings[Ast->Content.Funct.Var.Name] << "\"";
+                        break;
+                }
+                Text << "." << ToText(Ast->Content.Funct.Body);
                 break;
             }
             case TUPLE_NODE: {
@@ -477,8 +511,28 @@ struct VM {
     }
 };
 
-int main() {
-    VM Vm("../Text.lame");
+int main(int size, const char* args[]) {
+    if (size < 2) {
+        throw runtime_error("debe propocionar argumentos");
+        return 0;
+    }
+    array<int, 3> op;//opciones de VM
+    signed Debug = -1;
+    if (size > 2) {
+        for(int i = 2; i < size; i++) {
+            string str = args[i];
+            if (str == "-d") {//debug
+                op[0] = true;
+                i++;
+                string debug = args[i];
+                Debug = debug == "-1" ? -1 : debug == "0" ? 0 : debug == "1" ? 1 : debug == "2" ? 2 : debug == "3" ? 3 : -1;
+            } else {
+                throw runtime_error("marcador indefinido: " + str + ".");
+                return 1;
+            }
+        }
+    }
+    VM Vm(args[1],Debug);
     cout << Vm << endl;
     cout << "Functiones definidas:" << endl;
     for(array<string, 2>& str : Vm.getAllFuncts()) {
@@ -501,5 +555,8 @@ int main() {
     }
     cout << "resultado final:" << endl;
     cout << Vm << endl;
-    return 0;
+    cout << "wait.";
+    string NoUsing;
+    cin >> NoUsing;
+    return 0; 
 }
