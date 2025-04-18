@@ -353,15 +353,22 @@ struct VM {
         run_function(Functs[Main], args);
     }
     
-    void run_function(Nodo*& NodoPtr, vector<Nodo*>& args) {
+    void run_function(Nodo*& NodoPtr, vector<Nodo*>& args, bool visita = false) {
         Nodo& Node = *NodoPtr;
         NodeType key = Node.tipo;
         switch (key) {
             case GRUPO_NODE: {//1
                 Nodo*& left = Node.Content.Grupo.Left;
                 Nodo*& right = Node.Content.Grupo.Right;
+                if (visita) {
+                    vector<Nodo*> voidleft;
+                    vector<Nodo*> voidright;
+                    run_function(left, voidleft, true);
+                    run_function(right, voidright, true);
+                    break;
+                }
                 vector<Nodo*> voidargs;
-                run_function(right, voidargs);
+                run_function(right, voidargs, true);
                 if (left->tipo == FUNCT_NODE) {
                     args.push_back(right);
                 }
@@ -372,6 +379,7 @@ struct VM {
                 break;
             }
             case REF_NODE:{//4
+                if (visita) break;
                 Nodo* NodoFunct = Functs[Node.Content.Ref]->copy({},countID);//crear una copia para evitar auto referencia
                 run_function(NodoFunct, args);
                 NodoPtr = NodoFunct;
@@ -379,6 +387,10 @@ struct VM {
             }
             case VAR_NODE:{//2
                 Nodo**& var = Node.Content.Var.Ptr;
+                if (visita && (**var).tipo != NULL_NODE) {
+                    NodoPtr = (*var)->copy({},countID);
+                    break;
+                }
                 if ((**var).tipo != NULL_NODE) {
                     NodoPtr = (*var)->copy({},countID);
                 }
@@ -387,7 +399,7 @@ struct VM {
             case FUNCT_NODE:{//0
                 Nodo**& var = Node.Content.Funct.Var.Ptr;
                 Nodo*& body = Node.Content.Funct.Body;
-                if (args.size() >= 1){
+                if (args.size() >= 1 && !visita){
                     *var = args.back();
                     args.pop_back();
                     run_function(body, args);
@@ -397,7 +409,8 @@ struct VM {
                     NodoPtr = NodeNew;
                     break;
                 }
-                run_function(body, args);
+                vector<Nodo*> Void;
+                run_function(body, Void);
                 break;
             }
             case STR_NODE: {//3
